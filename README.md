@@ -4,6 +4,12 @@ Q-Sys module to create a custom dialog by utilizing a UCI shared layer.
 
 [![Luacheck](https://github.com/scsole/q-sys-module-dialog-controller/actions/workflows/luacheck.yml/badge.svg)](https://github.com/scsole/q-sys-module-dialog-controller/actions/workflows/luacheck.yml)
 
+## Features
+
+- Allows for a fully custom dialog layout using a shared layer
+- Provides a familiar `ShowDialog` interface for use in UCI scripts
+- Optional timeout to automatically hide the dialog 
+
 ## Quick start
 
 1. Clone or download this repository to the Modules directory: `git clone https://github.com/scsole/q-sys-module-dialog-controller.git dialog-controller`
@@ -37,12 +43,14 @@ local CustomDialog = DialogController:New(sharedLayerName, btnCtrls, titleCtrl, 
 -- Show a dialog (Modified from Uci.ShowDialog docs)
 
 ButtonText = {
+  "Timeout, no button was pushed",
   "Button 1 was pushed",
   "Button 2 was pushed",
   "Button 3 was pushed",
 }
 
 function UCIDialogHandler(choiceInt)
+  -- A timeout returns 0, hence buttons are one-based
   print(choiceInt, ButtonText[choiceInt + 1])
   Controls.WhichButton.String = ButtonText[choiceInt + 1]
 end
@@ -58,6 +66,7 @@ function ShowDialog()
         "Button 3",
       },
       Handler = UCIDialogHandler,
+      Timeout = 30, -- Close the dialog after 30s
     }
   )
 end
