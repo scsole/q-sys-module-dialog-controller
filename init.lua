@@ -9,16 +9,25 @@ local function hideDialog(self)
   Uci.SetSharedLayerVisibility(self.LayerName, false, self.Transition)
 end
 
----Hide the dialog layer and initialize button event handlers.
+---Hide the dialog layer and initialize event handlers.
 ---@param self table The dialog controller table
 local function initialize(self)
   hideDialog(self)
 
+  self.Timer.EventHandler = function()
+    if self.Handler then
+      self.Handler(0)
+    end
+    self.Timer:Stop()
+    hideDialog(self)
+  end
+
   if self.Controls.Buttons and #self.Controls.Buttons > 0 then
     for i, btn in ipairs(self.Controls.Buttons) do
       btn.EventHandler = function()
+        self.Timer:Stop()
         if self.Handler then
-          self.Handler(i)
+          self.Handler(i) -- Unlike the zero-based Q-Sys Dialog Handler, this is one-based
         end
         hideDialog(self)
       end
@@ -44,6 +53,7 @@ function DialogController:New(layerName, buttonCtrls, titleCtrl, messageCtrl)
       Buttons = buttonCtrls,
     },
     Handler = nil,
+    Timer = Timer.New(),
   }
   initialize(obj)
   self.__index = self
@@ -52,11 +62,15 @@ end
 
 ---Display a dialog using a shared layer in a UCI that contains an optional title, message, and custom buttons.
 ---@param dialogTable table A table consisting of `Buttons` (list of strings used as button legends), and optional
----fields: `Title` string, `Message` string, and `Handler` (the dialog event handler function, zero-based).
+---fields: `Title` string, `Message` string, `Handler` (the dialog event handler function, one-based), and `Timeout`
+---(the time in seconds before automatically closing the dialog). If the timeout is reached, then the event handler
+---will be passed 0.
 function DialogController:ShowDialog(dialogTable)
   if self.Controls.Title ~= nil and dialogTable.Title ~= nil then
     self.Controls.Title.Legend = dialogTable.Title
   end
+
+  self.Timer:Stop()
 
   if self.Controls.Message ~= nil and dialogTable.Message ~= nil then
     self.Controls.Message.Legend = dialogTable.Message
@@ -81,6 +95,10 @@ function DialogController:ShowDialog(dialogTable)
     end
 
     showDialog(self)
+
+    if dialogTable.Timeout and dialogTable.Timeout > 0 then
+      self.Timer:Start(dialogTable.Timeout)
+    end
   else
     print("[DialogController] ShowDialog: WARN: No button legends provided or available, aborting dialog")
   end
