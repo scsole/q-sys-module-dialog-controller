@@ -62,9 +62,9 @@ end
 
 ---Display a dialog using a shared layer in a UCI that contains an optional title, message, and custom buttons.
 ---@param dialogTable table A table consisting of `Buttons` (list of strings used as button legends), and optional
----fields: `Title` string, `Message` string, `Handler` (the dialog event handler function, one-based), and `Timeout`
----(the time in seconds before automatically closing the dialog). If the timeout is reached, then the event handler
----will be passed 0.
+---fields: `Title` string, `Message` string, `Handler` (the dialog event handler function, one-based), `Timeout`
+---(the time in seconds before automatically closing the dialog) and `Styles` (list of css classes used for dynamic)
+---button styling). If the timeout is reached, then the event handler will be passed 0.
 function DialogController:ShowDialog(dialogTable)
   if self.Controls.Title ~= nil and dialogTable.Title ~= nil then
     self.Controls.Title.String = dialogTable.Title
@@ -89,6 +89,11 @@ function DialogController:ShowDialog(dialogTable)
       if dialogTable.Buttons[i] and dialogTable.Buttons[i] ~= '' then
         btn.Legend = dialogTable.Buttons[i]
         btn.IsInvisible = false
+        if dialogTable.Styles and dialogTable.Styles[i] then
+          btn.CssClass = dialogTable.Styles[i]
+        else
+          btn.CssClass = ""
+        end
       else
         btn.IsInvisible = true
       end

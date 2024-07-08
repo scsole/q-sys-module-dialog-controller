@@ -65,6 +65,9 @@ function ShowDialog()
         nil, -- nil or "" will hide the associated button
         "Button 3",
       },
+      Styles = {
+        [3] = "btn-dialog-alt" -- use a custom style for the third button
+      },
       Handler = UCIDialogHandler,
       Timeout = 30, -- Close the dialog after 30s
     }
