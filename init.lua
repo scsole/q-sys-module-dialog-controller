@@ -40,8 +40,8 @@ end
 ---Create a new dialog controller instance.
 ---@param layerName string Name of the UCI shared layer used as a dialog
 ---@param buttonCtrls table List of button controls used as the dialog's options
----@param titleCtrl table? Optional button control used to display the dialog title
----@param messageCtrl table? Optional button control used to display the dialog message
+---@param titleCtrl table? Optional text control used to display the dialog title
+---@param messageCtrl table? Optional text control used to display the dialog message
 ---@return table # A new dialog controller instance
 function DialogController:New(layerName, buttonCtrls, titleCtrl, messageCtrl)
   local obj = {
@@ -67,13 +67,13 @@ end
 ---will be passed 0.
 function DialogController:ShowDialog(dialogTable)
   if self.Controls.Title ~= nil and dialogTable.Title ~= nil then
-    self.Controls.Title.Legend = dialogTable.Title
+    self.Controls.Title.String = dialogTable.Title
   end
 
   self.Timer:Stop()
 
   if self.Controls.Message ~= nil and dialogTable.Message ~= nil then
-    self.Controls.Message.Legend = dialogTable.Message
+    self.Controls.Message.String = dialogTable.Message
   end
 
   self.Handler = dialogTable.Handler

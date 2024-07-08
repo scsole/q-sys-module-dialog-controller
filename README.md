@@ -8,7 +8,7 @@ Q-Sys module to create a custom dialog by utilizing a UCI shared layer.
 
 - Allows for a fully custom dialog layout using a shared layer
 - Provides a familiar `ShowDialog` interface for use in UCI scripts
-- Optional timeout to automatically hide the dialog 
+- Optional timeout to automatically hide the dialog
 
 ## Quick start
 
@@ -35,8 +35,8 @@ local buttonCtrls = {
     Controls.Dialog_Btn_2,
     -- Add as required
 }
-local titleCtrl = Controls.Dialog_Title -- set to nil if unused, else use a UCI trigger button
-local messageCtrl = Controls.Dialog_Message -- set to nil if unused, else use a UCI trigger button
+local titleCtrl = Controls.Dialog_Title -- set to nil if unused, else use a UCI text box (read only)
+local messageCtrl = Controls.Dialog_Message -- set to nil if unused, else use a UCI text box (read only)
 
 local CustomDialog = DialogController:New(sharedLayerName, btnCtrls, titleCtrl, messageCtrl)
 
